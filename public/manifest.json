@@ -1,0 +1,11 @@
+{
+  "name": "Mr. Roboto - Truck Services",
+  "short_name": "Mr. Roboto",
+  "description": "Voice-activated roadside assistance coordination",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": []
+}

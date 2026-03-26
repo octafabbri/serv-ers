@@ -1,0 +1,8 @@
+{
+  "name": "Serv-ERS",
+  "description": "A voice-activated AI assistant dispatcher for emergency roadside assistance.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "prompt": ""
+}
