@@ -187,7 +187,7 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
       setIsResponseComplete(false);
       setIsSpeaking(true);
       try {
-        const voiceName = userProfile.voiceOutput.voiceURI || 'onyx';
+        const voiceName = userProfile.voiceOutput.voiceURI || '21m00Tcm4TlvDq8ikWAM';
         const base64Audio = await generateSpeech(text, voiceName);
         if (base64Audio) {
           await playAudioContent(base64Audio, userProfile.voiceOutput.volume);
