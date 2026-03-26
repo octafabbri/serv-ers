@@ -954,6 +954,7 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
 
   const handleChatSend = useCallback((message: string) => {
     if (!message.trim()) return;
+    initializeAudio().catch(() => {}); // unlock AudioContext during user gesture
     processUserInput(message);
   }, [processUserInput]);
 
