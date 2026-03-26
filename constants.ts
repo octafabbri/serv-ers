@@ -181,14 +181,22 @@ export const OPENAI_VOICES = [
   { name: 'Shimmer (Soft/Warm)', id: 'shimmer' },
 ];
 
-// ElevenLabs premade voices
+// ElevenLabs premade voices (verified free-plan compatible)
 export const ELEVENLABS_VOICES = [
-  { name: 'Adam (Deep/Authoritative)', id: 'pNInz6obpgDQGcFmaJgB' },
-  { name: 'Josh (Deep/Male)', id: 'TxGEqnHWrfWFTfGW9XjX' },
-  { name: 'Arnold (Strong/Male)', id: 'VR6AewLTigWG4xSOukaG' },
-  { name: 'Rachel (Calm/Female)', id: '21m00Tcm4TlvDq8ikWAM' },
-  { name: 'Bella (Soft/Female)', id: 'EXAVITQu4vr4xnSDxMaL' },
-  { name: 'Elli (Young/Female)', id: 'MF3mGyEYCl7XYWbV9V6O' },
+  { name: 'Sarah (Mature/Female)', id: 'EXAVITQu4vr4xnSDxMaL' },
+  { name: 'Adam (Deep/Male)', id: 'pNInz6obpgDQGcFmaJgB' },
+  { name: 'Alice (Clear/Female)', id: 'Xb7hH8MSUJpSbSDYk0k2' },
+  { name: 'Brian (Deep/Male)', id: 'nPczCjzI2devNBz1zQrb' },
+  { name: 'Charlie (Confident/Male)', id: 'IKne3meq5aSn9XLyUdCD' },
+  { name: 'Daniel (Broadcaster/Male)', id: 'onwK4e9ZLuTAKqWW03F9' },
+  { name: 'Eric (Smooth/Male)', id: 'cjVigY5qzO86Huf0OWal' },
+  { name: 'Jessica (Playful/Female)', id: 'cgSgspJ2msm6clMCkdW9' },
+  { name: 'Laura (Enthusiast/Female)', id: 'FGY2WhTYpPnrIDTdsKH5' },
+  { name: 'Liam (Energetic/Male)', id: 'TX3LPaxmHKxFdv7VOQHJ' },
+  { name: 'Lily (Velvety/Female)', id: 'pFZP5JQG7iQjIQuC4Bku' },
+  { name: 'Matilda (Professional/Female)', id: 'XrExE9yKIg1WjnnlVkGX' },
+  { name: 'River (Neutral/Nonbinary)', id: 'SAz9YHcvj6GT2YYXdXww' },
+  { name: 'Roger (Casual/Male)', id: 'CwhRBWXzGAHq8TQ4Fs17' },
 ];
 
 export const DEFAULT_USER_PROFILE: UserProfile = {
@@ -198,7 +206,7 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
     rate: 1,
     pitch: 1,
     volume: 1,
-    voiceURI: '21m00Tcm4TlvDq8ikWAM', // ElevenLabs: Rachel (calm/female) — OpenAI fallback: 'onyx'
+    voiceURI: 'EXAVITQu4vr4xnSDxMaL', // ElevenLabs: Sarah (free plan compatible)
   },
   voiceInput: {
     language: 'en-US',

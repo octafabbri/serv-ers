@@ -154,7 +154,7 @@ function findRequestInText(text: string, requests: ServiceRequest[]): ServiceReq
 export const ProviderVoiceAssistant: React.FC<ProviderVoiceAssistantProps> = ({
   isDark,
   userId,
-  voiceName = '21m00Tcm4TlvDq8ikWAM',
+  voiceName = 'EXAVITQu4vr4xnSDxMaL',
   language = 'en-US',
   onAccept,
   onReject,

@@ -21,7 +21,7 @@ function loadProviderSettings(): ProviderVoiceSettings {
     const stored = localStorage.getItem(PROVIDER_SETTINGS_KEY);
     if (stored) return JSON.parse(stored);
   } catch { /* ignore */ }
-  return { voiceURI: '21m00Tcm4TlvDq8ikWAM', language: 'en-US' };
+  return { voiceURI: 'EXAVITQu4vr4xnSDxMaL', language: 'en-US' };
 }
 
 function saveProviderSettings(settings: ProviderVoiceSettings): void {

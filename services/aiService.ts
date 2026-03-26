@@ -124,7 +124,7 @@ const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
   return btoa(binary);
 };
 
-export const generateSpeech = async (text: string, voiceName: string = 'pNInz6obpgDQGcFmaJgB'): Promise<string | null> => {
+export const generateSpeech = async (text: string, voiceName: string = 'EXAVITQu4vr4xnSDxMaL'): Promise<string | null> => {
   console.log(`🎤 Generating speech — provider: ${USE_ELEVENLABS_TTS ? 'ElevenLabs' : 'OpenAI'}, voice: ${voiceName}, text length: ${text.length}`);
 
   const maxAttempts = 3;
