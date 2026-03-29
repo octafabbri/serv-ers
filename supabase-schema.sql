@@ -101,7 +101,11 @@ CREATE TABLE service_requests (
   proposed_date TIMESTAMPTZ,
   proposal_history JSONB NOT NULL DEFAULT '[]'::jsonb,
   last_updated_by TEXT,
-  decline_reason TEXT
+  decline_reason TEXT,
+
+  -- Additional required fields
+  ship_to TEXT,
+  unit_number TEXT
 );
 
 CREATE INDEX idx_sr_status ON service_requests(status);

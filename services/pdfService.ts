@@ -136,6 +136,9 @@ const renderPDFHTML = (request: ServiceRequest): string => {
           <p style="margin: 5px 0; font-size: 13px;">
             <strong>Fleet:</strong> ${request.fleet_name}
           </p>
+          <p style="margin: 5px 0; font-size: 13px;">
+            <strong>Ship To:</strong> ${request.ship_to}
+          </p>
         </div>
 
         <!-- Location -->
@@ -170,6 +173,9 @@ const renderPDFHTML = (request: ServiceRequest): string => {
           </h3>
           <p style="margin: 5px 0; font-size: 13px;">
             <strong>Type:</strong> ${request.vehicle.vehicle_type}
+          </p>
+          <p style="margin: 5px 0; font-size: 13px;">
+            <strong>Unit Number:</strong> ${request.unit_number}
           </p>
         </div>
 

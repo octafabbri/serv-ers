@@ -360,7 +360,9 @@ EXTRACTION RULES:
 5. Extract location from highway numbers, mile markers, city names, streets, rest stops, exits
 6. Extract phone from ANY mention of phone/contact number
 7. Extract fleet_name from company name, fleet name, or trucking company mentions
-8. Infer vehicle_type: "truck" or "semi" → TRUCK, "trailer" → TRAILER
+8. Extract ship_to from any mention of a billing name, ship-to account, or ship-to location for the fleet
+9. Extract unit_number from any mention of a unit number, truck number, or trailer number
+10. Infer vehicle_type: "truck" or "semi" → TRUCK, "trailer" → TRAILER
 
 FOR TIRE REQUESTS - extract tire_info:
    - requested_service: "REPLACE" or "REPAIR" (from "replace", "new tire" → REPLACE; "repair", "patch", "plug" → REPAIR)
@@ -377,6 +379,8 @@ Return JSON with ALL extracted fields. Include fields even if partially complete
   "driver_name": "string",
   "contact_phone": "string",
   "fleet_name": "string",
+  "ship_to": "string",
+  "unit_number": "string",
   "service_type": "TIRE" | "MECHANICAL",
   "urgency": "ERS" | "DELAYED" | "SCHEDULED",
   "location": {

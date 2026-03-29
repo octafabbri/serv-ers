@@ -10,6 +10,8 @@ export const createServiceRequest = (): ServiceRequest => {
     driver_name: '',
     contact_phone: '',
     fleet_name: '',
+    ship_to: '',
+    unit_number: '',
     service_type: '' as ServiceType,
     urgency: '' as ServiceUrgency,
     location: {} as LocationInfo,
@@ -37,6 +39,12 @@ export const validateServiceRequest = (request: ServiceRequest): {
   }
   if (!request.fleet_name || request.fleet_name.trim() === '') {
     missingFields.push('fleet_name');
+  }
+  if (!request.ship_to || request.ship_to.trim() === '') {
+    missingFields.push('ship_to');
+  }
+  if (!request.unit_number || request.unit_number.trim() === '') {
+    missingFields.push('unit_number');
   }
   if (!request.service_type) {
     missingFields.push('service_type');

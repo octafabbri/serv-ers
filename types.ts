@@ -154,6 +154,10 @@ export interface ServiceRequest {
   driver_name: string;
   contact_phone: string;
   fleet_name: string;
+  ship_to: string;
+
+  // Vehicle identifier
+  unit_number: string;
 
   // Service details
   service_type: ServiceType;

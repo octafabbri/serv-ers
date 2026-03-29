@@ -126,6 +126,8 @@ interface ServiceRequestRow {
   last_updated_by_name?: string;
   last_updated_by_role?: string;
   decline_reason: string | null;
+  ship_to: string | null;
+  unit_number: string | null;
 }
 
 const rowToServiceRequest = (row: ServiceRequestRow): ServiceRequest => ({
@@ -157,6 +159,8 @@ const rowToServiceRequest = (row: ServiceRequestRow): ServiceRequest => ({
   last_updated_by_name: row.last_updated_by_name ?? undefined,
   last_updated_by_role: row.last_updated_by_role ?? undefined,
   decline_reason: row.decline_reason ?? undefined,
+  ship_to: row.ship_to ?? '',
+  unit_number: row.unit_number ?? '',
 });
 
 const serviceRequestToRow = (request: ServiceRequest) => ({
@@ -184,6 +188,8 @@ const serviceRequestToRow = (request: ServiceRequest) => ({
   proposal_history: request.proposal_history || [],
   last_updated_by: request.last_updated_by || null,
   decline_reason: request.decline_reason || null,
+  ship_to: request.ship_to || null,
+  unit_number: request.unit_number || null,
 });
 
 export const submitServiceRequest = async (request: ServiceRequest): Promise<ServiceRequest | null> => {
