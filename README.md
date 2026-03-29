@@ -1,4 +1,4 @@
-# Hey — AI Dispatcher for Commercial Trucking
+# Serv — AI Dispatcher for Commercial Trucking
 
 A voice-first AI dispatching platform for emergency roadside assistance. Built with React + TypeScript, powered by OpenAI and backed by Supabase.
 
@@ -65,8 +65,8 @@ Two personas share the platform:
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/octafabbri/hey.git
-cd hey
+git clone https://github.com/octafabbri/serv-ers.git
+cd serv-ers
 npm install
 ```
 
@@ -159,7 +159,7 @@ npm run deploy
 ## Project Structure
 
 ```
-hey/
+serv/
 ├── App.tsx                        # Root — role selector, routes to FleetApp or ProviderApp
 ├── constants.ts                   # AI system prompts, task keywords, voice configs
 ├── types.ts                       # TypeScript interfaces (ServiceRequest, ProposalEntry, etc.)

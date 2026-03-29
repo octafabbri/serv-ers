@@ -39,7 +39,7 @@ describe('userProfileService', () => {
         serviceRequests: [],
       };
 
-      localStorage.setItem('heyBibUserProfile', JSON.stringify(savedProfile));
+      localStorage.setItem('servUserProfile', JSON.stringify(savedProfile));
 
       const profile = loadUserProfile();
 
@@ -49,7 +49,7 @@ describe('userProfileService', () => {
     });
 
     it('should handle corrupted localStorage data', () => {
-      localStorage.setItem('heyBibUserProfile', 'invalid json');
+      localStorage.setItem('servUserProfile', 'invalid json');
 
       const profile = loadUserProfile();
 
@@ -80,7 +80,7 @@ describe('userProfileService', () => {
       saveUserProfile(profile);
 
       expect(localStorage.setItem).toHaveBeenCalledWith(
-        'heyBibUserProfile',
+        'servUserProfile',
         expect.stringContaining('shimmer')
       );
     });

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hey-bib-v1';
+const CACHE_NAME = 'serv-v1';
 const urlsToCache = [
   '/',
   '/index.html',

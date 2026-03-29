@@ -16,7 +16,7 @@ import { InputModeToggle } from '../InputModeToggle';
 import { ChatInterface, ChatMessage } from '../ChatInterface';
 import { getSpeechRecognition, playAudioContent, stopAudioPlayback, initializeAudio, SpeechRecognition, SpeechRecognitionEvent } from '../../services/speechService';
 import { determineTaskFromInput, createNewChatWithTask, extractNameWithAI, generateSpeech, extractServiceDataFromConversation, ChatSession } from '../../services/aiService';
-import { API_KEY_ERROR_MESSAGE, WELLNESS_CHECKIN_KEYWORDS, WELLNESS_CHECKIN_QUESTIONS, OPENAI_VOICES, ELEVENLABS_VOICES, USE_ELEVENLABS_TTS, SERVICE_REQUEST_KEYWORDS } from '../../constants';
+import { API_KEY_ERROR_MESSAGE, WELLNESS_CHECKIN_KEYWORDS, WELLNESS_CHECKIN_QUESTIONS, OPENAI_VOICES, ELEVENLABS_VOICES, USE_ELEVENLABS_TTS, SERVICE_REQUEST_KEYWORDS, FEATURE_FLAGS } from '../../constants';
 import { loadUserProfile, saveUserProfile, addMoodEntry } from '../../services/userProfileService';
 import { createServiceRequest, validateServiceRequest, addServiceRequest } from '../../services/serviceRequestService';
 import { generateServiceRequestPDF, downloadPDF } from '../../services/pdfService';
@@ -425,16 +425,27 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
       });
       setActiveServiceRequest(updatedRequest);
 
-      addMessage('ai', aiText);
-
       const validation = validateServiceRequest(updatedRequest);
       if (validation.isComplete) {
-        const prompt = "Want me to read back the details before submitting?";
-        addMessage('ai', prompt);
-        speakAiResponse(aiText);
-        speakAiResponse(prompt);
-        setIsAwaitingSummaryPrompt(true);
+        if (FEATURE_FLAGS.SUMMARY_PROMPT_ENABLED) {
+          // Original: ask if they want a recap first
+          const prompt = "Want me to read back the details before submitting?";
+          addMessage('ai', aiText);
+          addMessage('ai', prompt);
+          speakAiResponse(aiText);
+          speakAiResponse(prompt);
+          setIsAwaitingSummaryPrompt(true);
+        } else {
+          // Always show summary immediately
+          const summary = buildConfirmationSummary(updatedRequest);
+          addMessage('ai', aiText);
+          addMessage('ai', summary);
+          speakAiResponse(aiText);
+          speakAiResponse(summary);
+          setIsAwaitingConfirmation(true);
+        }
       } else {
+        addMessage('ai', aiText);
         speakAiResponse(aiText);
       }
     } catch (error) {
@@ -451,7 +462,7 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
   const handleServiceRequestResponse = useCallback(async (text: string) => {
     if (!serviceRequestSession || !activeServiceRequest) return;
 
-    // Handle "want to hear the details?" response
+    // Handle "want to hear the details?" response — only reachable when FEATURE_FLAGS.SUMMARY_PROMPT_ENABLED is true
     if (isAwaitingSummaryPrompt) {
       const lowerText = text.toLowerCase();
       const wantsSummary = CONFIRMATION_KEYWORDS.some(kw => lowerText.includes(kw));
@@ -552,15 +563,26 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
 
       const validation = validateServiceRequest(updatedRequest);
 
-      addMessage('ai', aiText);
-
       if (validation.isComplete) {
-        const prompt = "Want me to read back the details before submitting?";
-        addMessage('ai', prompt);
-        speakAiResponse(aiText);
-        speakAiResponse(prompt);
-        setIsAwaitingSummaryPrompt(true);
+        if (FEATURE_FLAGS.SUMMARY_PROMPT_ENABLED) {
+          // Original: ask if they want a recap first
+          const prompt = "Want me to read back the details before submitting?";
+          addMessage('ai', aiText);
+          addMessage('ai', prompt);
+          speakAiResponse(aiText);
+          speakAiResponse(prompt);
+          setIsAwaitingSummaryPrompt(true);
+        } else {
+          // Always show summary immediately
+          const summary = buildConfirmationSummary(updatedRequest);
+          addMessage('ai', aiText);
+          addMessage('ai', summary);
+          speakAiResponse(aiText);
+          speakAiResponse(summary);
+          setIsAwaitingConfirmation(true);
+        }
       } else {
+        addMessage('ai', aiText);
         speakAiResponse(aiText);
       }
     } catch (error) {
@@ -734,15 +756,18 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
 
   const handleStatusQuery = useCallback(async () => {
     const all = myRequestsRef.current;
-    // Find counter-proposals from provider that fleet needs to respond to
-    const pendingReviews = all.filter(r => {
-      const lastBy = r.proposal_history?.slice(-1)[0]?.proposed_by;
-      return r.status === 'counter_proposed' && lastBy === 'service_provider';
-    });
 
-    if (pendingReviews.length > 0) {
-      await startVoiceReview(pendingReviews[0]);
-      return;
+    // Voice counter-proposal review — disabled: FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED
+    if (FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED) {
+      // Find counter-proposals from provider that fleet needs to respond to
+      const pendingReviews = all.filter(r => {
+        const lastBy = r.proposal_history?.slice(-1)[0]?.proposed_by;
+        return r.status === 'counter_proposed' && lastBy === 'service_provider';
+      });
+      if (pendingReviews.length > 0) {
+        await startVoiceReview(pendingReviews[0]);
+        return;
+      }
     }
 
     setIsLoadingAI(true);
@@ -994,7 +1019,8 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
   };
 
   // Fleet Counter-Proposal Form (overlay — propose different time)
-  if (counterProposingRequest) {
+  // Disabled: FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED
+  if (FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED && counterProposingRequest) {
     return (
       <>
         <FleetCounterProposalForm
@@ -1019,7 +1045,8 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
   }
 
   // Counter-Proposal Review (overlay)
-  if (reviewingRequest) {
+  // Disabled: FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED
+  if (FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED && reviewingRequest) {
     return (
       <>
         <CounterProposalReview
@@ -1048,7 +1075,8 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
           isDark={isDark}
           isLoading={isLoadingRequests}
           onReviewCounterProposal={(req) => {
-            if (req.status === 'counter_proposed') {
+            // Disabled: FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED
+            if (FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED && req.status === 'counter_proposed') {
               setReviewingRequest(req);
             }
           }}
@@ -1057,7 +1085,8 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
             const lastBy = req.proposal_history?.length
               ? req.proposal_history[req.proposal_history.length - 1].proposed_by
               : null;
-            if (req.status === 'counter_proposed' && lastBy === 'service_provider') {
+            // Disabled: FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED
+            if (FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED && req.status === 'counter_proposed' && lastBy === 'service_provider') {
               setReviewingRequest(req);
             } else {
               setDetailRequest(req);
@@ -1070,6 +1099,8 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
             isDark={isDark}
             onClose={() => setDetailRequest(null)}
             onReviewCounterProposal={(() => {
+              // Disabled: FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED
+              if (!FEATURE_FLAGS.COUNTER_PROPOSAL_UI_ENABLED) return undefined;
               if (detailRequest.status !== 'counter_proposed') return undefined;
               const lastBy = detailRequest.proposal_history?.length
                 ? detailRequest.proposal_history[detailRequest.proposal_history.length - 1].proposed_by

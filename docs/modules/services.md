@@ -199,6 +199,6 @@ Pure functions for service request management (no network calls).
 | `addMoodEntry(profile, entry)` | Appends `MoodEntry` to profile |
 
 Storage keys (from `constants.ts`):
-- `heyBibUserProfile`
-- `heyUserRole`
-- `heyDeviceId`
+- `servUserProfile`
+- `servUserRole`
+- `servDeviceId`

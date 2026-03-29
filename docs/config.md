@@ -87,9 +87,9 @@ Incremental migrations are in [supabase/migrations/](../supabase/migrations/). T
 
 | Key | Managed by | Content |
 |---|---|---|
-| `heyBibUserProfile` | `userProfileService` | Serialised `UserProfile` JSON |
-| `heyUserRole` | `userProfileService` | `"fleet"` or `"provider"` |
-| `heyDeviceId` | `userProfileService` | UUID (device identity) |
+| `servUserProfile` | `userProfileService` | Serialised `UserProfile` JSON |
+| `servUserRole` | `userProfileService` | `"fleet"` or `"provider"` |
+| `servDeviceId` | `userProfileService` | UUID (device identity) |
 | `provider_voice_settings` | `ProviderApp` | `{ voiceURI, language }` |
 
 ## sessionStorage Keys (Provider only)
