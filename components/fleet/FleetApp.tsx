@@ -1171,7 +1171,7 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
               🚛
             </div>
             <h1 style={{ fontSize: '34px', fontWeight: 'var(--font-weight-bold)', color: 'var(--label-primary)', marginBottom: '12px' }}>
-              Michelin Services
+              Fleet Services
             </h1>
             <p style={{ fontSize: '20px', color: 'var(--label-secondary)', marginBottom: '40px' }}>
               Powered by Serv

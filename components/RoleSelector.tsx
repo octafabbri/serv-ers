@@ -21,7 +21,7 @@ export const RoleSelector: React.FC<RoleSelectorProps> = ({ onRoleSelected }) =>
             marginBottom: '8px',
           }}
         >
-          Michelin Services
+          Fleet Services
         </h1>
         <p
           style={{
