@@ -7,11 +7,13 @@ export const createServiceRequest = (): ServiceRequest => {
   return {
     id: crypto.randomUUID(),
     timestamp: new Date(),
+    caller_type: 'DRIVER',
     driver_name: '',
     contact_phone: '',
     fleet_name: '',
     ship_to: '',
     unit_number: '',
+    vin_number: '',
     service_type: '' as ServiceType,
     urgency: '' as ServiceUrgency,
     location: {} as LocationInfo,
@@ -31,6 +33,17 @@ export const validateServiceRequest = (request: ServiceRequest): {
   const missingFields: string[] = [];
 
   // ── Base fields (always required) ──
+  if (!request.caller_type) {
+    missingFields.push('caller_type');
+  }
+  if (request.caller_type === 'FLEET_MANAGER') {
+    if (!request.caller_name || request.caller_name.trim() === '') {
+      missingFields.push('caller_name');
+    }
+    if (!request.caller_phone || request.caller_phone.trim() === '') {
+      missingFields.push('caller_phone');
+    }
+  }
   if (!request.driver_name || request.driver_name.trim() === '') {
     missingFields.push('driver_name');
   }
@@ -45,6 +58,9 @@ export const validateServiceRequest = (request: ServiceRequest): {
   }
   if (!request.unit_number || request.unit_number.trim() === '') {
     missingFields.push('unit_number');
+  }
+  if (!request.vin_number || request.vin_number.trim() === '') {
+    missingFields.push('vin_number');
   }
   if (!request.service_type) {
     missingFields.push('service_type');

@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        proxy: {
+          '/api/v3': 'http://localhost:3001',
+          '/idp':    'http://localhost:3001',
+        },
       },
       plugins: [react()],
       // Vite automatically handles VITE_* environment variables via import.meta.env

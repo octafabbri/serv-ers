@@ -105,7 +105,11 @@ CREATE TABLE service_requests (
 
   -- Additional required fields
   ship_to TEXT,
-  unit_number TEXT
+  unit_number TEXT,
+  caller_type TEXT,
+  caller_name TEXT,
+  caller_phone TEXT,
+  vin_number TEXT
 );
 
 CREATE INDEX idx_sr_status ON service_requests(status);

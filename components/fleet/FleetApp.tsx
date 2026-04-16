@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { AssistantTask, ActiveModalInfo, ParkingSpot, UserProfile, MoodEntry, ServiceRequest } from '../../types';
+import { AssistantTask, ActiveModalInfo, ParkingSpot, UserProfile, MoodEntry, ServiceRequest, ServiceType, ServiceUrgency } from '../../types';
 import Modal from '../Modal';
 import SettingsModal from '../SettingsModal';
 import { IdleState } from '../voice-ui/IdleState';
@@ -16,12 +16,12 @@ import { InputModeToggle } from '../InputModeToggle';
 import { ChatInterface, ChatMessage } from '../ChatInterface';
 import { getSpeechRecognition, playAudioContent, stopAudioPlayback, initializeAudio, SpeechRecognition, SpeechRecognitionEvent } from '../../services/speechService';
 import { determineTaskFromInput, createNewChatWithTask, extractNameWithAI, generateSpeech, extractServiceDataFromConversation, ChatSession } from '../../services/aiService';
-import { API_KEY_ERROR_MESSAGE, WELLNESS_CHECKIN_KEYWORDS, WELLNESS_CHECKIN_QUESTIONS, OPENAI_VOICES, ELEVENLABS_VOICES, USE_ELEVENLABS_TTS, SERVICE_REQUEST_KEYWORDS, FEATURE_FLAGS } from '../../constants';
+import { API_KEY_ERROR_MESSAGE, WELLNESS_CHECKIN_KEYWORDS, WELLNESS_CHECKIN_QUESTIONS, OPENAI_VOICES, ELEVENLABS_VOICES, SILICONFLOW_VOICES, GEMINI_VOICES, TTS_PROVIDER, SERVICE_REQUEST_KEYWORDS, FEATURE_FLAGS } from '../../constants';
 import { loadUserProfile, saveUserProfile, addMoodEntry } from '../../services/userProfileService';
 import { createServiceRequest, validateServiceRequest, addServiceRequest } from '../../services/serviceRequestService';
 import { generateServiceRequestPDF, downloadPDF } from '../../services/pdfService';
-import { isSupabaseConfigured, submitServiceRequest as submitToSupabase } from '../../services/supabaseService';
-import { useSupabaseAuth } from '../../hooks/useSupabaseAuth';
+import { submitCase } from '../../services/apiService';
+import { useGeolocation } from '../../hooks/useGeolocation';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useServiceRequests } from '../../hooks/useServiceRequests';
 import { NotificationBanner } from './NotificationBanner';
@@ -67,7 +67,7 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
 
   // User Profile & Settings
   const [userProfile, setUserProfile] = useState<UserProfile>(loadUserProfile());
-  const [availableVoices] = useState<{name: string, id: string}[]>(USE_ELEVENLABS_TTS ? ELEVENLABS_VOICES : OPENAI_VOICES);
+  const [availableVoices] = useState<{name: string, id: string}[]>(TTS_PROVIDER === 'elevenlabs' ? ELEVENLABS_VOICES : TTS_PROVIDER === 'siliconflow' ? SILICONFLOW_VOICES : TTS_PROVIDER === 'gemini' ? GEMINI_VOICES : OPENAI_VOICES);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   // Wellness Check-in
@@ -90,12 +90,13 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
   // Offline Detection
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // Supabase Auth — ensures anonymous session exists before submitting requests
-  const { userId: supabaseUserId } = useSupabaseAuth();
+  // Geolocation — used when submitting cases to the API
+  const geolocation = useGeolocation();
+  const supabaseUserId: string | null = null;
 
   // Notifications & Work Order History
   const { notifications, unreadCount, refresh: refreshNotifications, markAllRead, activeToast, dismissToast } = useNotifications(supabaseUserId);
-  const { requests: myRequests, isLoading: isLoadingRequests, refresh: refreshRequests } = useServiceRequests(supabaseUserId);
+  const { requests: myRequests, isLoading: isLoadingRequests, refresh: refreshRequests } = useServiceRequests(userProfile.serviceRequests.at(-1)?.ship_to ?? null);
   const [reviewingRequest, setReviewingRequest] = useState<ServiceRequest | null>(null);
   const [counterProposingRequest, setCounterProposingRequest] = useState<ServiceRequest | null>(null);
   const [detailRequest, setDetailRequest] = useState<ServiceRequest | null>(null);
@@ -322,6 +323,36 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
     };
   };
 
+  // Apply implicit defaults that the ERS single-position prompt intentionally skips asking for
+  const applyRequestDefaults = (request: ServiceRequest): ServiceRequest => {
+    const result = { ...request };
+
+    // ERS-only flow: urgency and service_type are always fixed
+    if (!FEATURE_FLAGS.MECHANICAL_SERVICE_ENABLED) {
+      if (!result.urgency) result.urgency = 'ERS' as ServiceUrgency;
+      if (!result.service_type) result.service_type = 'TIRE' as ServiceType;
+    }
+
+    // Single-position flow never asks "how many tires?" — default to 1
+    if (!FEATURE_FLAGS.MULTI_POSITION_SERVICE_ENABLED && result.tire_info) {
+      if (!result.tire_info.number_of_tires || result.tire_info.number_of_tires < 1) {
+        result.tire_info = { ...result.tire_info, number_of_tires: 1 };
+      }
+    }
+
+    // Unit number serves as VIN fallback when VIN is unknown
+    if (!result.vin_number && result.unit_number) {
+      result.vin_number = result.unit_number;
+    }
+
+    // Ship To fallback: drivers often don't know their billing account — use fleet name
+    if (!result.ship_to && result.fleet_name) {
+      result.ship_to = result.fleet_name;
+    }
+
+    return result;
+  };
+
   const formatDateForSpeech = (dateStr: string): string => {
     // Parse YYYY-MM-DD format into a speech-friendly string
     const parts = dateStr.split('-');
@@ -376,13 +407,11 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
     console.log('FINALIZING SERVICE REQUEST');
     request.status = 'submitted';
 
-    // Save to Supabase if configured
-    if (isSupabaseConfigured()) {
-      try {
-        await submitToSupabase(request);
-      } catch (err) {
-        console.error('Supabase submit failed, falling back to localStorage:', err);
-      }
+    // Submit to internal API
+    try {
+      await submitCase(request, geolocation);
+    } catch (err) {
+      console.error('API submit failed, falling back to localStorage:', err);
     }
 
     // Always save to localStorage as well
@@ -399,7 +428,7 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
     setActiveServiceRequest(null);
     setIsAwaitingConfirmation(false);
     setIsAwaitingSummaryPrompt(false);
-  }, [userProfile, speakAiResponse, addMessage]);
+  }, [userProfile, geolocation, speakAiResponse, addMessage]);
 
   const startServiceRequest = useCallback(async (initialMessage: string) => {
     const newRequest = createServiceRequest();
@@ -422,13 +451,14 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
       const newExchange = `user: ${initialMessage}\nai: ${aiText}`;
       const extractedData = await extractServiceDataFromConversation(newExchange, newRequest);
 
-      const updatedRequest = mergeServiceRequestData(newRequest, {
+      const updatedRequest = applyRequestDefaults(mergeServiceRequestData(newRequest, {
         ...extractedData,
         conversation_transcript: newExchange,
-      });
+      }));
       setActiveServiceRequest(updatedRequest);
 
       const validation = validateServiceRequest(updatedRequest);
+      console.log('🔍 Validation after start:', { isComplete: validation.isComplete, missingFields: validation.missingFields });
       if (validation.isComplete) {
         if (FEATURE_FLAGS.SUMMARY_PROMPT_ENABLED) {
           // Original: ask if they want a recap first
@@ -558,13 +588,14 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
         activeServiceRequest
       );
 
-      const updatedRequest = mergeServiceRequestData(activeServiceRequest, {
+      const updatedRequest = applyRequestDefaults(mergeServiceRequestData(activeServiceRequest, {
         ...extractedData,
         conversation_transcript: fullTranscript,
-      });
+      }));
       setActiveServiceRequest(updatedRequest);
 
       const validation = validateServiceRequest(updatedRequest);
+      console.log('🔍 Validation after response:', { isComplete: validation.isComplete, missingFields: validation.missingFields });
 
       if (validation.isComplete) {
         if (FEATURE_FLAGS.SUMMARY_PROMPT_ENABLED) {

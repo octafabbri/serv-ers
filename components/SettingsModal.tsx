@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { UserProfile, VoiceOutputSettings, VoiceInputSettings } from '../types';
-import { SUPPORTED_INPUT_LANGUAGES, USE_ELEVENLABS_TTS } from '../constants';
+import { SUPPORTED_INPUT_LANGUAGES, TTS_PROVIDER } from '../constants';
 import Modal from './Modal';
 
 interface SettingsModalProps {
@@ -98,8 +98,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentP
           
           <div className="mb-4">
              <p className="text-xs text-gray-400 mb-2">
-               {USE_ELEVENLABS_TTS
+               {TTS_PROVIDER === 'elevenlabs'
                  ? 'Note: Using high-quality ElevenLabs voices. Rate/Pitch adjustments are not supported.'
+                 : TTS_PROVIDER === 'siliconflow'
+                 ? 'Note: Using SiliconFlow CosyVoice2 voices. Rate/Pitch adjustments are not supported.'
+                 : TTS_PROVIDER === 'gemini'
+                 ? 'Note: Using Gemini 3.1 Flash TTS voices. Rate/Pitch adjustments are not supported.'
                  : 'Note: Using high-quality OpenAI TTS voices. Rate/Pitch adjustments are not supported by OpenAI TTS.'}
              </p>
           </div>

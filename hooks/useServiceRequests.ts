@@ -1,44 +1,77 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ServiceRequest } from '../types';
-import {
-  isSupabaseConfigured,
-  getServiceRequests,
-  subscribeToMyRequests,
-} from '../services/supabaseService';
+import { getCases } from '../services/apiService';
 
-export function useServiceRequests(userId?: string | null) {
+function toDateString(d: Date): string {
+  return d.toISOString().split('T')[0];
+}
+
+export function useServiceRequests(shipTo?: string | null) {
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchMyRequests = useCallback(async () => {
-    if (!isSupabaseConfigured() || !userId) {
+  const fetchRequests = useCallback(async () => {
+    if (!shipTo) {
       setIsLoading(false);
       return;
     }
 
     try {
-      const data = await getServiceRequests({ createdBy: userId });
-      setRequests(data);
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 30);
+
+      const cases = await getCases({
+        shipTo,
+        startDate: toDateString(startDate),
+        endDate: toDateString(endDate),
+        limit: 50,
+      });
+
+      // Map API list items to a minimal ServiceRequest shape for the history list
+      const mapped = cases.map((c) => ({
+        id: c.id,
+        timestamp: new Date(c.created_at),
+        status: apiStatusToLocal(c.caseStatus),
+        ship_to: c.shipTo ?? shipTo,
+        // Required fields with defaults — not available in the list response
+        caller_type: 'DRIVER' as const,
+        driver_name: '',
+        contact_phone: '',
+        fleet_name: '',
+        unit_number: '',
+        vin_number: '',
+        service_type: 'TIRE' as ServiceRequest['service_type'],
+        urgency: 'ERS' as ServiceRequest['urgency'],
+        location: {},
+        vehicle: { vehicle_type: 'TRUCK' as ServiceRequest['vehicle']['vehicle_type'] },
+      } as ServiceRequest));
+
+      setRequests(mapped);
     } catch (err) {
-      console.error('Failed to fetch service requests:', err);
+      console.error('Failed to fetch cases:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [userId]);
+  }, [shipTo]);
 
   useEffect(() => {
-    fetchMyRequests();
+    fetchRequests();
 
-    if (!isSupabaseConfigured() || !userId) return;
+    if (!shipTo) return;
 
-    const channel = subscribeToMyRequests(userId, () => {
-      fetchMyRequests();
-    });
+    const interval = setInterval(fetchRequests, 60_000);
+    return () => clearInterval(interval);
+  }, [fetchRequests, shipTo]);
 
-    return () => {
-      channel?.unsubscribe();
-    };
-  }, [fetchMyRequests, userId]);
+  return { requests, isLoading, refresh: fetchRequests };
+}
 
-  return { requests, isLoading, refresh: fetchMyRequests };
+function apiStatusToLocal(caseStatus: string): ServiceRequest['status'] {
+  switch (caseStatus) {
+    case 'NEW': return 'submitted';
+    case 'DISPATCHED': return 'accepted';
+    case 'COMPLETED': return 'completed';
+    default: return 'submitted';
+  }
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { OPENAI_VOICES, ELEVENLABS_VOICES, USE_ELEVENLABS_TTS } from '../constants';
+import { OPENAI_VOICES, ELEVENLABS_VOICES, SILICONFLOW_VOICES, GEMINI_VOICES, TTS_PROVIDER } from '../constants';
 
 interface SettingsPageProps {
   isDark: boolean;
@@ -40,7 +40,7 @@ export function SettingsPage({ isDark, currentVoice = 'onyx', currentLanguage = 
     }
   };
 
-  const voicePersonas = (USE_ELEVENLABS_TTS ? ELEVENLABS_VOICES : OPENAI_VOICES).map(voice => ({
+  const voicePersonas = (TTS_PROVIDER === 'elevenlabs' ? ELEVENLABS_VOICES : TTS_PROVIDER === 'siliconflow' ? SILICONFLOW_VOICES : TTS_PROVIDER === 'gemini' ? GEMINI_VOICES : OPENAI_VOICES).map(voice => ({
     id: voice.id,
     label: voice.name
   }));

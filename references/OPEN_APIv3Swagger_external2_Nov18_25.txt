@@ -1,0 +1,1269 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Open API Generic Service v3",
+    "description": "Open API for case management and mechanical cases.",
+    "version": "2025-10-21T17:37:48.000Z"
+  },
+  "servers": [
+    {
+      "url": "https://qualif.api.example.com"
+    },
+    {
+      "url": "https://api.example.com"
+    }
+  ],
+  "security": [
+    {
+      "bearer": []
+    }
+  ],
+  "paths": {
+    "/api/v3/cases/{id}": {
+      "get": {
+        "tags": [
+          "Cases"
+        ],
+        "description": "Get unified case (v3)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unified case number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Case details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "created_at": "2025-07-27T20:11:52.211Z",
+                    "updated_at": "2025-08-03T19:24:02.776Z",
+                    "customerST": "1471852",
+                    "customerBT": "1424651",
+                    "id": "Z8D13493LK",
+                    "ersResponse": {
+                      "data": {
+                        "assetLocation": {
+                          "address": "[REDACTED_ADDRESS]",
+                          "city": "[REDACTED_CITY]",
+                          "country": "[REDACTED_COUNTRY]",
+                          "note": "comment",
+                          "state": "[REDACTED_STATE]",
+                          "latitude": 0,
+                          "longitude": 0,
+                          "zipCode": "[REDACTED_ZIP]",
+                          "highway": null,
+                          "milemarker": null,
+                          "timezone": null
+                        },
+                        "etaDuration": {
+                          "min": null,
+                          "max": null
+                        },
+                        "fixpix": {
+                          "sent": "not_attempted",
+                          "sentTimestamp": ""
+                        },
+                        "caseNumber": "E",
+                        "caseStatus": "new",
+                        "previousStatus": null,
+                        "statusTimeStamp": "2025-07-27T20:11:59.712Z",
+                        "userName": "user@example.com",
+                        "typeOfCase": "api-call",
+                        "inboundProgram": "Michelin OnCall - Electronic Dispatch",
+                        "inboundProgramNumberId": 229,
+                        "inboundCallerStore": null,
+                        "inboundStoreBillTo": "NA",
+                        "inboundStoreShipTo": null,
+                        "paymentMethod": "michelin_line_of_credit",
+                        "customerName": "[REDACTED_CUSTOMER]",
+                        "accountNumber": "1471852",
+                        "providerName": null,
+                        "poNumber": "[REDACTED_PO_NUMBER]",
+                        "drNumber": "[REDACTED_DR_NUMBER]",
+                        "refNumber": "[REDACTED_REFERENCE]",
+                        "ticketNumber": "[REDACTED_TICKET_NUMBER]",
+                        "invoiceNumber": "[REDACTED_INVOICE_NUMBER]",
+                        "billingAmount": "0.00",
+                        "workOrderNumber": null,
+                        "billingComment": "test",
+                        "releaseNumber": null,
+                        "contractNumber": null,
+                        "servicingDealerBilltoName": null,
+                        "servicingDealerStore": null,
+                        "servicingDealerTimezone": null,
+                        "specialInstructions": "test patch",
+                        "delayedService": true,
+                        "delayedServiceNote": null,
+                        "delayedServiceCompletionDate": "2025-07-26T00:00:00.000Z",
+                        "delayedServiceDispatchDate": null,
+                        "updatedAt": "2025-08-03T19:23:54.518Z",
+                        "insertedAt": "2025-07-27T20:11:59.712Z",
+                        "billable": false,
+                        "customer": {
+                          "shipTo": "1471852",
+                          "billTo": "1424651",
+                          "name": "[REDACTED_CUSTOMER]",
+                          "city": "[REDACTEDCITY]",
+                          "state": "[REDACTEDSTATE]",
+                          "zip": "[REDACTEDZIP]",
+                          "street": "[REDACTEDADDRESS]"
+                        },
+                        "contacts": [
+                          {
+                            "contactName": "[REDACTED_NAME]",
+                            "contactPhone": "+10000000000",
+                            "contactType": "dispatch",
+                            "contactEmail": null,
+                            "callbackEta": false,
+                            "callbackRolltime": false
+                          },
+                          {
+                            "contactName": "[REDACTED_NAME]",
+                            "contactPhone": "+10000000000",
+                            "contactType": "driver_cell",
+                            "contactEmail": null,
+                            "callbackEta": false,
+                            "callbackRolltime": false
+                          }
+                        ],
+                        "serviceData": [],
+                        "requestedService": [
+                          {
+                            "type": "request",
+                            "unitNumber": "UNIT-0000",
+                            "action": "replace",
+                            "condition": "blank_case",
+                            "position": "rf",
+                            "axle": "other",
+                            "tireSize": "10.00/90R20",
+                            "tireBrand": "Michelin",
+                            "treadDesign": "PILOT XFA",
+                            "productType": "New",
+                            "rimMaterial": null,
+                            "wheelOffset": null,
+                            "rimType": null,
+                            "loadRange": "see_notes",
+                            "confirmed": null
+                          }
+                        ],
+                        "agreedService": [
+                          {
+                            "type": "agreement",
+                            "unitNumber": "UNIT-0000",
+                            "action": "replace",
+                            "condition": "blank_case",
+                            "position": "rf",
+                            "axle": "other",
+                            "tireSize": "10.00/90R20",
+                            "tireBrand": "Michelin",
+                            "treadDesign": "PILOT XFA",
+                            "productType": "New",
+                            "rimMaterial": null,
+                            "wheelOffset": null,
+                            "rimType": null,
+                            "loadRange": "see_notes",
+                            "confirmed": null
+                          }
+                        ],
+                        "suppliedService": [
+                          {
+                            "type": "supplied",
+                            "unitNumber": "UNIT-0000",
+                            "action": "replace",
+                            "condition": "blank_case",
+                            "position": "rf",
+                            "axle": "other",
+                            "tireSize": "10.00/90R20",
+                            "tireBrand": "Michelin",
+                            "treadDesign": "PILOT XFA",
+                            "productType": "New",
+                            "rimMaterial": null,
+                            "wheelOffset": null,
+                            "rimType": null,
+                            "loadRange": "see_notes",
+                            "confirmed": true
+                          }
+                        ],
+                        "caseNotes": [],
+                        "linkedCalls": [],
+                        "notifications": [],
+                        "assets": [
+                          {
+                            "identifier": "00000000-0000-0000-0000-000000000000",
+                            "unitNumber": "UNIT-0000",
+                            "unitType": "tractor",
+                            "vin": null
+                          }
+                        ],
+                        "customerProfile": {
+                          "fleetContactsAvailable": true,
+                          "driverAuthorized": null,
+                          "poRequired": false,
+                          "tirePreferences": true,
+                          "wheelPreferences": false,
+                          "emailPreferences": true
+                        },
+                        "caseStatusChanges": [],
+                        "delays": []
+                      },
+                      "codeResponse": 200
+                    },
+                    "mechanicalResponse": {
+                      "data": {
+                        "eventNumber": 0000000,
+                        "custId": 000000,
+                        "customerCode": "MMMM11",
+                        "customerPONumber": "00000",
+                        "createDateUtc": "2025-07-27T03:54:22.937Z",
+                        "updatedDateUtc": "2025-08-03T20:27:19.75Z",
+                        "vendorAssignedDateUtc": "2025-07-27T04:20:00Z",
+                        "repairStartedDateUtc": "2025-07-27T06:30:00Z",
+                        "repairCompletedDateUtc": "2025-07-27T10:07:00Z",
+                        "serviceProviderWorkCompletedDateUtc": null,
+                        "status": "rolling"
+                      },
+                      "codeResponse": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Cases"
+        ],
+        "description": "Allows to update the case information (billing information, assets, products, location, etc).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Case Number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "billingInfo": {
+                    "comment": "Send any comment here",
+                    "poNumber": "Po Number here",
+                    "mechanicalPONumber": "Mechanical Po Number here",
+                    "drNumber": "DR Number here",
+                    "referenceNumber": "reference number here",
+                    "invoiceNumber": "invoice number here",
+                    "amount": "0.00"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Case update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "id": "Z8D13493LK",
+                    "customerST": "1111111",
+                    "customerBT": "2222222",
+                    "created_at": "2025-07-27T20:11:52.211Z",
+                    "updated_at": "2025-08-03T19:24:02.776Z",
+                    "ersResponse": {
+                      "codeResponse": 200,
+                      "data": {
+                        "id": "E484128",
+                        "inboundProgramNumberId": "229",
+                        "status": "NEW",
+                        "dispatchedAt": null,
+                        "billTo": null,
+                        "shipTo": null,
+                        "eta": null,
+                        "provider": {
+                          "name": null,
+                          "address": null
+                        },
+                        "source": "OnCall",
+                        "parent_company": null,
+                        "home_office": null
+                      }
+                    },
+                    "mechanicalResponse": {
+                      "codeResponse": 200,
+                      "data": {
+                        
+"eventNumber": 0000000,
+                        "custId": 000000,
+                        "customerCode": "MMMM11",
+                        "customerPONumber": "00000",
+
+                        "createDateUtc": "2025-07-27T03:54:22.937Z",
+                        "updatedDateUtc": "2025-08-03T20:27:19.75Z",
+                        "vendorAssignedDateUtc": "2025-07-27T04:20:00Z",
+                        "repairStartedDateUtc": "2025-07-27T06:30:00Z",
+                        "repairCompletedDateUtc": "2025-07-27T10:07:00Z",
+                        "serviceProviderWorkCompletedDateUtc": null,
+                        "status": "new"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/api/v3/cases": {
+      "post": {
+        "tags": [
+          "Cases"
+        ],
+        "description": "Create a case in the case management system (v3).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "location",
+                  "fleet",
+                  "assets",
+                  "products",
+                  "caller",
+                  "locationValidated"
+                ],
+                "properties": {
+                  "inboundProgramNumberId": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "object",
+                    "required": [
+                      "latitude",
+                      "longitude",
+                      "country",
+                      "comments",
+                      "locationValidated"
+                    ],
+                    "properties": {
+                      "latitude": {
+                        "type": "string"
+                      },
+                      "longitude": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string",
+                         "enum": [
+                            "USA",
+                            "CAN"                            
+                          ]
+                      },
+                      "comments": {
+                        "type": "string"
+                      },
+                      "highway": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "mileMarker": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "timezone": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "fleet": {
+                    "type": "object",
+                    "required": [
+                      "shipTo"
+                    ],
+                    "properties": {
+                      "shipTo": {
+                        "type": "string"
+                      },
+                      "billTo": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "domicile": {
+                    "type": "string",
+                    "maxLength": 30
+                  },
+                  "assets": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "vinNumber",
+                        "unitDetail",
+                        "unitPrimary",
+                        "unitNumber",
+                        "type",
+                        "droppedUnit"
+                      ],
+                      "properties": {
+                        "vinNumber": {
+                          "type": "string"
+                        },
+                        "unitDetail": {
+                          "type": "object",
+                          "properties": {
+                            "loadWeightInImperialPounds": {
+                              "type": "number"
+                            },
+                            "mileage": {
+                              "type": "number"
+                            },
+                            "hubReading": {
+                              "type": "number"
+                            },
+                            "licensePlateNumber": {
+                              "type": "string"
+                            },
+                            "unitYear": {
+                              "type": "number"
+                            },
+                            "makeId": {
+                              "type": "number",
+                              "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                              "description": "Vehicle manufacturer ID. Valid values: 1=Chevy, 2=Dodge, 3=Ford, 4=Freightliner, 5=GMC, 6=Hino, 7=International, 8=Kenworth, 9=Mack, 10=Mercedes, 11=Peterbilt, 12=Western Star, 13=Isuzu, 14=Autocar, 15=Ottawa, 16=Volvo, 17=Capacity"
+                            },
+                            "model": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "unitPrimary": {
+                          "type": "boolean"
+                        },
+                        "unitNumber": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                           "TRACTOR",                            
+                            "DOLLY",
+                            "TRAILER"
+                          ]
+                        },
+                        "droppedUnit": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  },
+                  "specialInstructions": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "unitNumber"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "TIRE",
+                            "WHEEL",
+                            "MECHANICAL"
+                          ]
+                        },
+                        "unitNumber": {
+                          "type": "string"
+                        },
+                        "tire": {
+                          "type": "object",
+                          "properties": {
+                            "action": {
+                              "type": "string",
+                              "enum": [
+                                "REPAIR_IF_POSSIBLE",
+                                "REPLACE",
+                                "REPLACE_WITH_SPARE",
+                                "SPECIAL_INSTRUCTIONS"
+                              ]
+                            },
+                            "position": {
+                              "type": "string",
+                              "enum": [
+                                "RFI",
+                                "RRO",
+                                "RR",
+                                "LR",
+                                "LFI",
+                                "LFO",
+                                "RFO",
+                                "LRI",
+                                "RRI",
+                                "LRO",
+                                "LF",
+                                "RF"
+                              ]
+                            },
+                            "condition": {
+                              "type": "string",
+                              "enum": [
+                                "BLANK_CASE",
+                                "BLOWN_TIRE",
+                                "CORDS_SHOWING",
+                                "FLAT_TIRE",
+                                "FLAT_SPOTTED",
+                                "LEAKING_AIR",
+                                "OBJECT_IN_TIRE",
+                                "OFF_THE_RIM",
+                                "PEELED_CAP",
+                                "RIM_DAMAGED",
+                                "SHREDDED",
+                                "SIDEWALL_CUT",
+                                "STOLEN",
+                                "TREAD_SEPARATION",
+                                "WORN_OUT",
+                                "SPARE_MOUNT",
+                                "MECHANICAL_SERVICE"
+                              ]
+                            },
+                            "axle": {
+                              "type": "string",
+                              "enum": [
+                                "DRIVE",
+                                "OTHER",
+                                "STEER",
+                                "TRAILER"
+                              ]
+                            },
+                            "brand": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "tread": {
+                              "type": "string"
+                            },
+                            "size": {
+                              "type": "string"
+                            },
+                            "loadRange": {
+                              "type": "string",
+                              "enum": [
+                                "L",
+                                "M",
+                                "D",
+                                "G",
+                                "J",
+                                "E",
+                                "C",
+                                "H",
+                                "F",
+                                "NA",
+                                "XL",
+                                "NP"
+                              ]
+                            }
+                          }
+                        },
+                        "wheel": {
+                          "type": "object",
+                          "properties": {
+                            "position": {
+                              "type": "string",
+                              "enum": [
+                                "RFI",
+                                "RRO",
+                                "RR",
+                                "LR",
+                                "LFI",
+                                "LFO",
+                                "RFO",
+                                "LRI",
+                                "RRI",
+                                "LRO",
+                                "LF",
+                                "RF"
+                              ]
+                            },
+                            "size": {
+                              "type": "string"
+                            },
+                            "offset": {
+                              "type": "string",
+                              "enum": ["0", "2", "NA"]
+                            },
+                            "axle": {
+                              "type": "string",
+                              "enum": ["DRIVE", "OTHER", "STEER", "TRAILER"]
+                            },
+                            "material": {
+                              "type": "string",
+                              "enum": ["ALUMINUM", "STEEL"]
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "mechanical": {
+                          "type": "object",
+                          "properties": {
+                            "troubleCodeId": {
+                              "type": "number"
+                            },
+                            "complaint": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "caller": {
+                    "type": "object",
+                    "required": [
+                      "phone",
+                      "name"
+                    ],
+                    "properties": {
+                      "phone": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "smsNotification": {
+                        "type": "boolean",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "driver": {
+                    "type": "object",
+                    "properties": {
+                      "phone": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "smsNotification": {
+                        "type": "boolean",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "billingInfo": {
+                    "type": "object",
+                    "properties": {
+                      "comment": {
+                        "type": "string",
+                        "maxLength": 300
+                      },
+                      "poNumber": {
+                        "type": "string"
+                      },
+                      "mechanicalPONumber": {
+                        "type": "string"
+                      },
+                      "drNumber": {
+                        "type": "string"
+                      },
+                      "referenceNumber": {
+                        "type": "string"
+                      },
+                      "invoiceNumber": {
+                        "type": "string"
+                      },
+                      "amount": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "delayedServiceCompletionDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "locationValidated": {
+                    "type": "boolean",
+                    "description": "Indicates if the vehicle location was validated by a device on the placement"
+                  }
+                  }
+                }
+              }
+            }
+          },
+        "responses": {
+          "200": {
+            "description": "Case created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "customerST": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "ersResponse": {
+                      "type": "object",
+                      "properties": {
+                        "codeResponse": {
+                          "type": "integer",
+                          "description": "Response code from ERS system"
+                        },
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "NEW",
+                                "DISPATCHED",
+                                "COMPLETED"
+                              ]
+                            },
+                            "dispatchedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "nullable": true
+                            },
+                            "billTo": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "shipTo": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "eta": {
+                              "type": "object",
+                              "nullable": true,
+                              "properties": {
+                                "minMinutes": {
+                                  "type": "string"
+                                },
+                                "maxMinutes": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "source": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          }
+                        },
+                        "errors": {
+                          "type": "object",
+                          "additionalProperties": true,
+                          "description": "Error messages from ERS system"
+                        }
+                      }
+                    },
+                    "mechanicalResponse": {
+                      "type": "object",
+                      "properties": {
+                        "codeResponse": {
+                          "type": "integer",
+                          "description": "Response code from Mechanical system"
+                        },
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "eventNumber": {
+                              "type": "number",
+                              "description": "Event number from mechanical system"
+                            },
+                            "custId": {
+                              "type": "number",
+                              "description": "Customer ID"
+                            },
+                            "customerCode": {
+                              "type": "string",
+                              "description": "Customer code"
+                            },
+                            "customerPONumber": {
+                              "type": "string",
+                              "description": "Customer PO number"
+                            },
+                            "createDateUtc": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Creation date in UTC"
+                            },
+                            "updatedDateUtc": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Last update date in UTC"
+                            },
+                            "vendorAssignedDateUtc": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Vendor assignment date in UTC"
+                            },
+                            "repairStartedDateUtc": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Repair start date in UTC"
+                            },
+                            "repairCompletedDateUtc": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Repair completion date in UTC"
+                            },
+                            "serviceProviderWorkCompletedDateUtc": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Service provider work completion date in UTC"
+                            }
+                          }
+                        },
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "errors": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "description": "Error messages mapping"
+                            },
+                            "type": {
+                              "type": "string",
+                              "description": "Error type"
+                            },
+                            "title": {
+                              "type": "string",
+                              "description": "Error title"
+                            },
+                            "status": {
+                              "type": "number",
+                              "description": "Error status code"
+                            },
+                            "detail": {
+                              "type": "string",
+                              "description": "Detailed error message"
+                            },
+                            "instance": {
+                              "type": "string",
+                              "description": "Error instance identifier"
+                            }
+                          },
+                          "additionalProperties": true,
+                          "description": "Error details from mechanical system"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "customerST",
+                    "created_at",
+                    "updated_at"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Cases"
+        ],
+        "description": "Find cases. Either customerShipTo or customerBillTo (or both) must be provided.",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerShipTo",
+            "in": "query",
+            "description": "Customer Ship To. Either this or customerBillTo must be provided.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerBillTo",
+            "in": "query",
+            "description": "Customer Bill To. Either this or customerShipTo must be provided.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Pagination limit",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Pagination skip",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of cases",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "cases": [
+                      {
+                        "id": 42,
+                        "caseId": "I3BE6AINGC",
+                        "ipn": null,
+                        "customerShipTo": "1471852",
+                        "ocxId": "E484103",
+                        "fntId": null,
+                        "fntCase": null,
+                        "ocxCase": {
+                          "data": {
+                            "type": "ers-cases",
+                            "warning": null,
+                            "attributes": {
+                              "contacts": [
+                                {
+                                  "name": "John",
+                                  "type": "DRIVER_CELL",
+                                  "phone": "9314090552",
+                                  "callBackEta": false,
+                                  "smsNotification": true,
+                                  "callBackRollTime": false
+                                },
+                                {
+                                  "name": "John",
+                                  "type": "DISPATCH",
+                                  "phone": "9314090552",
+                                  "callBackEta": false,
+                                  "smsNotification": true,
+                                  "callBackRollTime": false
+                                }
+                              ],
+                              "location": {
+                                "zip": "29651",
+                                "city": "Greer",
+                                "note": "comment",
+                                "state": "SC",
+                                "country": "USA",
+                                "highway": "",
+                                "latitude": "34.9289684",
+                                "timezone": "",
+                                "longitude": "-82.2007266",
+                                "mileMarker": "",
+                                "searchValue": "202 GSP Logistic Parkway Greer, SC 29651 US",
+                                "streetAddress": "202 GSP Logistic Parkway"
+                              },
+                              "agreedTires": [
+                                {
+                                  "asset": "#/data/attributes/primaryAsset",
+                                  "axleType": "OTHER",
+                                  "tireSize": "10.00/90R20",
+                                  "loadRange": "L",
+                                  "productType": "New",
+                                  "manufacturer": "Michelin",
+                                  "tirePosition": "RF",
+                                  "requestedTire": "#/data/attributes/requestedTires/0",
+                                  "tireCondition": "BLANK_CASE",
+                                  "requestedAction": "REPLACE",
+                                  "sculptedTreadName": "PILOT XFA"
+                                }
+                              ],
+                              "billingInfo": {
+                                "amount": "0.00",
+                                "comment": "test",
+                                "drNumber": "DR123204909",
+                                "poNumber": "123",
+                                "mechanicalPONumber": "111",
+                                "ticketNumber": "DR123204909",
+                                "invoiceNumber": "345",
+                                "referenceNumber": "ref12345"
+                              },
+                              "nafaCustomer": {
+                                "billTo": "1424651",
+                                "shipTo": "1471852"
+                              },
+                              "primaryAsset": {
+                                "vin": null,
+                                "type": "Tractor",
+                                "unitNumber": "MT2626",
+                                "droppedUnit": false
+                              },
+                              "relatedAssets": [],
+                              "suppliedTires": [
+                                {
+                                  "asset": "#/data/attributes/primaryAsset",
+                                  "axleType": "OTHER",
+                                  "tireSize": "10.00/90R20",
+                                  "loadRange": "L",
+                                  "agreedTire": "#/data/attributes/agreedTires/0",
+                                  "productType": "New",
+                                  "manufacturer": "Michelin",
+                                  "tirePosition": "RF",
+                                  "tireCondition": "BLANK_CASE",
+                                  "requestedAction": "REPLACE",
+                                  "sculptedTreadName": "PILOT XFA"
+                                }
+                              ],
+                              "requestedTires": [
+                                {
+                                  "asset": "#/data/attributes/primaryAsset",
+                                  "axleType": "OTHER",
+                                  "tireSize": "10.00/90R20",
+                                  "loadRange": "L",
+                                  "productType": "New",
+                                  "manufacturer": "Michelin",
+                                  "tirePosition": "RF",
+                                  "tireCondition": "BLANK_CASE",
+                                  "requestedAction": "REPLACE",
+                                  "sculptedTreadName": "PILOT XFA"
+                                }
+                              ],
+                              "specialInstructions": "",
+                              "inboundProgramNumberId": 229,
+                              "location_validated_by_driver_app": false
+                            }
+                          }
+                        },
+                        "createdAt": "2025-07-25T12:55:07.244Z",
+                        "updatedAt": "2025-07-25T12:55:19.367Z",
+                        "customerBillTo": "1424651"
+                      },
+                      {
+                        "id": 40,
+                        "caseId": "KBJPUUD6O5",
+                        "ipn": null,
+                        "customerShipTo": "1471852",
+                        "ocxId": "E484101",
+                        "fntId": null,
+                        "fntCase": null,
+                        "ocxCase": {
+                          "data": {
+                            "type": "ers-cases",
+                            "warning": null,
+                            "attributes": {
+                              "contacts": [
+                                {
+                                  "name": "John",
+                                  "type": "DRIVER_CELL",
+                                  "phone": "9314090552",
+                                  "callBackEta": false,
+                                  "smsNotification": true,
+                                  "callBackRollTime": false
+                                },
+                                {
+                                  "name": "John",
+                                  "type": "DISPATCH",
+                                  "phone": "9314090552",
+                                  "callBackEta": false,
+                                  "smsNotification": true,
+                                  "callBackRollTime": false
+                                }
+                              ],
+                              "location": {
+                                "zip": "29651",
+                                "city": "Greer",
+                                "note": "comment",
+                                "state": "SC",
+                                "country": "USA",
+                                "highway": "",
+                                "latitude": "34.9289684",
+                                "timezone": "",
+                                "longitude": "-82.2007266",
+                                "mileMarker": "",
+                                "searchValue": "202 GSP Logistic Parkway Greer, SC 29651 US",
+                                "streetAddress": "202 GSP Logistic Parkway"
+                              },
+                              "agreedTires": [
+                                {
+                                  "asset": "#/data/attributes/primaryAsset",
+                                  "axleType": "OTHER",
+                                  "tireSize": "10.00/90R20",
+                                  "loadRange": "L",
+                                  "productType": "New",
+                                  "manufacturer": "Michelin",
+                                  "tirePosition": "RF",
+                                  "requestedTire": "#/data/attributes/requestedTires/0",
+                                  "tireCondition": "BLANK_CASE",
+                                  "requestedAction": "REPLACE",
+                                  "sculptedTreadName": "PILOT XFA"
+                                }
+                              ],
+                              "billingInfo": {
+                                "amount": "0.00",
+                                "comment": "test",
+                                "drNumber": "DR123204909",
+                                "poNumber": "123",
+                                "mechanicalPONumber": "111",
+                                "ticketNumber": "DR123204909",
+                                "invoiceNumber": "345",
+                                "referenceNumber": "ref12345"
+                              },
+                              "nafaCustomer": {
+                                "billTo": "1424651",
+                                "shipTo": "1471852"
+                              },
+                              "primaryAsset": {
+                                "vin": null,
+                                "type": "Tractor",
+                                "unitNumber": "MT2626",
+                                "droppedUnit": false
+                              },
+                              "relatedAssets": [],
+                              "suppliedTires": [
+                                {
+                                  "asset": "#/data/attributes/primaryAsset",
+                                  "axleType": "OTHER",
+                                  "tireSize": "10.00/90R20",
+                                  "loadRange": "L",
+                                  "agreedTire": "#/data/attributes/agreedTires/0",
+                                  "productType": "New",
+                                  "manufacturer": "Michelin",
+                                  "tirePosition": "RF",
+                                  "tireCondition": "BLANK_CASE",
+                                  "requestedAction": "REPLACE",
+                                  "sculptedTreadName": "PILOT XFA"
+                                }
+                              ],
+                              "requestedTires": [
+                                {
+                                  "asset": "#/data/attributes/primaryAsset",
+                                  "axleType": "OTHER",
+                                  "tireSize": "10.00/90R20",
+                                  "loadRange": "L",
+                                  "productType": "New",
+                                  "manufacturer": "Michelin",
+                                  "tirePosition": "RF",
+                                  "tireCondition": "BLANK_CASE",
+                                  "requestedAction": "REPLACE",
+                                  "sculptedTreadName": "PILOT XFA"
+                                }
+                              ],
+                              "specialInstructions": "",
+                              "inboundProgramNumberId": 229,
+                              "location_validated_by_driver_app": false
+                            }
+                          }
+                        },
+                        "createdAt": "2025-07-24T18:16:55.036Z",
+                        "updatedAt": "2025-07-24T18:17:20.311Z",
+                        "customerBillTo": "1424651"
+                      }
+                    ],
+                    "total": 29
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "bearer": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "/idp/v2/b2b/oauth2/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  }
+}

@@ -30,9 +30,13 @@ describe('serviceRequestService', () => {
     const createValidTireRequest = (): ServiceRequest => ({
       id: '123',
       timestamp: new Date(),
+      caller_type: 'DRIVER',
       driver_name: 'John Doe',
       contact_phone: '555-1234',
       fleet_name: 'ABC Trucking',
+      ship_to: 'SHIP001',
+      unit_number: 'UNIT001',
+      vin_number: '1HGBH41JXMN109186',
       service_type: ServiceType.TIRE,
       urgency: ServiceUrgency.ERS,
       location: {
@@ -53,9 +57,13 @@ describe('serviceRequestService', () => {
     const createValidMechanicalRequest = (): ServiceRequest => ({
       id: '456',
       timestamp: new Date(),
+      caller_type: 'DRIVER',
       driver_name: 'Jane Smith',
       contact_phone: '555-5678',
       fleet_name: 'XYZ Logistics',
+      ship_to: 'SHIP002',
+      unit_number: 'UNIT002',
+      vin_number: '2T1BURHE0JC043821',
       service_type: ServiceType.MECHANICAL,
       urgency: ServiceUrgency.ERS,
       location: {
@@ -315,9 +323,13 @@ describe('serviceRequestService', () => {
           {
             id: '123',
             timestamp: new Date(),
+            caller_type: 'DRIVER' as const,
             driver_name: 'John Doe',
             contact_phone: '555-1234',
             fleet_name: 'ABC Trucking',
+            ship_to: 'SHIP001',
+            unit_number: 'UNIT001',
+            vin_number: '1HGBH41JXMN109186',
             service_type: ServiceType.TIRE,
             urgency: ServiceUrgency.ERS,
             location: {

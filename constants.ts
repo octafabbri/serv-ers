@@ -2,10 +2,17 @@
 import { AssistantTask, UserProfile } from './types';
 
 // LLM: Groq (OpenAI-compatible) — swap model at https://console.groq.com/docs/models
-export const OPENAI_MODEL_TEXT = 'llama-3.3-70b-versatile'; // Change to any Groq model
-export const OPENAI_MODEL_TTS = 'tts-1'; // OpenAI TTS model (unused — ElevenLabs is active)
-// Feature flag: set to true to use ElevenLabs TTS, false to revert to OpenAI TTS
-export const USE_ELEVENLABS_TTS = true;
+export const OPENAI_MODEL_TEXT = 'llama-3.3-70b-versatile'; // Groq model
+// LLM provider: 'groq' | 'gemini'
+export const LLM_PROVIDER: 'groq' | 'gemini' = 'gemini';
+export const GEMINI_MODEL_TEXT = 'gemini-3.1-flash-lite-preview';
+export const OPENAI_MODEL_TTS = 'tts-1'; // OpenAI TTS model
+// TTS provider: 'siliconflow' | 'elevenlabs' | 'openai' | 'gemini'
+export const TTS_PROVIDER: 'siliconflow' | 'elevenlabs' | 'openai' | 'gemini' = 'gemini';
+// Backward-compat alias — true when ElevenLabs is the active provider
+export const USE_ELEVENLABS_TTS = TTS_PROVIDER === 'elevenlabs';
+export const SILICONFLOW_MODEL_TTS = 'FunAudioLLM/CosyVoice2-0.5B';
+export const GEMINI_MODEL_TTS = 'gemini-3.1-flash-tts-preview';
 
 // ── Scope feature flags — flip one boolean to re-enable any disabled feature ──
 export const FEATURE_FLAGS = {
@@ -25,11 +32,17 @@ IMPORTANT: You are part of the dispatch team. DO NOT search for or recommend ext
 
 REQUIRED INFORMATION TO COLLECT (ALL FIELDS MANDATORY):
 
+0. Caller Identity — Ask FIRST:
+   - "Are you the driver on the truck, or are you a fleet manager calling on behalf of a driver?"
+   - IF DRIVER: proceed to collect their name + phone as the driver contact.
+   - IF FLEET MANAGER: collect the manager's name and phone first (caller), THEN ask for the driver's name and phone separately.
+
 1. Contact Information:
-   - Driver's name (if {{USERNAME}} is "Driver", ask "What's your name?" naturally)
-   - Phone number
+   - Driver's name
+   - Driver's phone number
    - Fleet / company name
    - Ship To (the fleet's billing/ship-to account — ask "What's the Ship To for your fleet?")
+   - IF caller is fleet manager: also collect manager's name and phone
 
 2. Location Details:
    - Exact current location (highway, mile marker, exit number, parking lot name, city/state)
@@ -37,6 +50,7 @@ REQUIRED INFORMATION TO COLLECT (ALL FIELDS MANDATORY):
 3. Vehicle Information:
    - Vehicle type: MUST ask "Is this for a TRUCK or TRAILER?"
    - Unit Number: "What's the unit number?" (truck number or trailer number)
+   - VIN: "What's the VIN?" (if unknown, unit number works as fallback)
 
 4. Service Type — MUST determine: Is this a TIRE issue or a MECHANICAL issue?
    - If user says "broke down" or vague terms, ask: "Is this a tire issue or a mechanical problem?"
@@ -44,9 +58,10 @@ REQUIRED INFORMATION TO COLLECT (ALL FIELDS MANDATORY):
 
    IF TIRE:
    a. Requested service: "Do you need a tire REPLACED or REPAIRED?"
-   b. Tire details: "What size or brand tire do you need?" (e.g., "295/75R22.5", "Michelin XDA")
-   c. Quantity: "How many tires?"
-   d. Position: "Which tire position?" (e.g., "left front steer", "right rear drive", "trailer axle 2 outside")
+   b. Condition: "What's the condition — flat, blown out, leaking air, sidewall cut, or something else?"
+   c. Tire details: "What size or brand tire do you need?" (e.g., "295/75R22.5", "Michelin XDA")
+   d. Quantity: "How many tires?"
+   e. Position: "Which tire position?" (e.g., "left front steer", "right rear drive", "trailer axle 2 outside")
 
    IF MECHANICAL:
    a. Requested service: "What kind of service do you need?" (e.g., engine repair, brake service, towing, jump start)
@@ -100,11 +115,17 @@ ONE POSITION PER REQUEST:
 
 REQUIRED INFORMATION TO COLLECT (ALL FIELDS MANDATORY):
 
+0. Caller Identity — Ask FIRST:
+   - "Are you the driver on the truck, or are you a fleet manager calling on behalf of a driver?"
+   - IF DRIVER: proceed to collect their name + phone as the driver contact.
+   - IF FLEET MANAGER: collect the manager's name and phone first (caller), THEN ask for the driver's name and phone separately ("What's the driver's name and phone number?").
+
 1. Contact Information:
-   - Driver's name (if {{USERNAME}} is "Driver", ask "What's your name?" naturally)
-   - Phone number
+   - Driver's name
+   - Driver's phone number
    - Fleet / company name
    - Ship To (the fleet's billing/ship-to account — ask "What's the Ship To for your fleet?")
+   - IF caller is fleet manager: also collect manager's name and phone
 
 2. Location Details:
    - Exact current location (highway, mile marker, exit number, parking lot name, city/state)
@@ -112,11 +133,13 @@ REQUIRED INFORMATION TO COLLECT (ALL FIELDS MANDATORY):
 3. Vehicle Information:
    - Vehicle type: MUST ask "Is this for a TRUCK or TRAILER?"
    - Unit Number: "What's the unit number?" (truck number or trailer number)
+   - VIN: "What's the VIN?" (Vehicle Identification Number — if unknown, the unit number works as a fallback)
 
 4. Tire/Wheel/Mudflap Service Details (ONE POSITION):
    a. What's needed: "What do you need at that position — a tire replaced or repaired, a wheel, a mudflap, or a combination?"
-   b. Tire/part details: "What size or brand?" (e.g., "295/75R22.5", "Michelin XDA") — skip if mudflap-only
-   c. Position: "Which position?" (e.g., "left front steer", "right rear drive", "trailer axle 2 outside")
+   b. Condition: "What's the condition — flat, blown out, leaking air, sidewall cut, or something else?"
+   c. Tire/part details: "What size or brand?" (e.g., "295/75R22.5", "Michelin XDA") — skip if mudflap-only
+   d. Position: "Which position?" (e.g., "left front steer", "right rear drive", "trailer axle 2 outside")
 
 5. Urgency: ALWAYS ERS (Emergency Road Service) — same-day dispatch. Do not ask. Do not offer DELAYED or SCHEDULED options.
 
@@ -244,6 +267,52 @@ export const OPENAI_VOICES = [
   { name: 'Shimmer (Soft/Warm)', id: 'shimmer' },
 ];
 
+// SiliconFlow CosyVoice2-0.5B preset voices
+export const SILICONFLOW_VOICES = [
+  { name: 'Alex (Calm/Male)', id: 'FunAudioLLM/CosyVoice2-0.5B:alex' },
+  { name: 'Anna (Calm/Female)', id: 'FunAudioLLM/CosyVoice2-0.5B:anna' },
+  { name: 'Bella (Energetic/Female)', id: 'FunAudioLLM/CosyVoice2-0.5B:bella' },
+  { name: 'Benjamin (Deep/Male)', id: 'FunAudioLLM/CosyVoice2-0.5B:benjamin' },
+  { name: 'Charles (Magnetic/Male)', id: 'FunAudioLLM/CosyVoice2-0.5B:charles' },
+  { name: 'Claire (Gentle/Female)', id: 'FunAudioLLM/CosyVoice2-0.5B:claire' },
+  { name: 'David (Lively/Male)', id: 'FunAudioLLM/CosyVoice2-0.5B:david' },
+  { name: 'Diana (Lively/Female)', id: 'FunAudioLLM/CosyVoice2-0.5B:diana' },
+];
+
+// Gemini 3.1 Flash TTS Preview — 30 prebuilt voices
+export const GEMINI_VOICES = [
+  { name: 'Zephyr (Bright)', id: 'Zephyr' },
+  { name: 'Puck (Upbeat)', id: 'Puck' },
+  { name: 'Charon (Informative)', id: 'Charon' },
+  { name: 'Kore (Firm)', id: 'Kore' },
+  { name: 'Fenrir (Excitable)', id: 'Fenrir' },
+  { name: 'Leda (Youthful)', id: 'Leda' },
+  { name: 'Orus (Firm)', id: 'Orus' },
+  { name: 'Aoede (Breezy)', id: 'Aoede' },
+  { name: 'Callirrhoe (Easy-going)', id: 'Callirrhoe' },
+  { name: 'Autonoe (Bright)', id: 'Autonoe' },
+  { name: 'Enceladus (Breathy)', id: 'Enceladus' },
+  { name: 'Iapetus (Clear)', id: 'Iapetus' },
+  { name: 'Umbriel (Easy-going)', id: 'Umbriel' },
+  { name: 'Algieba (Smooth)', id: 'Algieba' },
+  { name: 'Despina (Smooth)', id: 'Despina' },
+  { name: 'Erinome (Clear)', id: 'Erinome' },
+  { name: 'Algenib (Gravelly)', id: 'Algenib' },
+  { name: 'Rasalgethi (Informative)', id: 'Rasalgethi' },
+  { name: 'Laomedeia (Upbeat)', id: 'Laomedeia' },
+  { name: 'Achernar (Soft)', id: 'Achernar' },
+  { name: 'Alnilam (Firm)', id: 'Alnilam' },
+  { name: 'Schedar (Even)', id: 'Schedar' },
+  { name: 'Gacrux (Mature)', id: 'Gacrux' },
+  { name: 'Pulcherrima (Forward)', id: 'Pulcherrima' },
+  { name: 'Achird (Friendly)', id: 'Achird' },
+  { name: 'Zubenelgenubi (Casual)', id: 'Zubenelgenubi' },
+  { name: 'Vindemiatrix (Gentle)', id: 'Vindemiatrix' },
+  { name: 'Sadachbia (Lively)', id: 'Sadachbia' },
+  { name: 'Sadaltager (Knowledgeable)', id: 'Sadaltager' },
+  { name: 'Sulafat (Warm)', id: 'Sulafat' },
+];
+
 // ElevenLabs premade voices (verified free-plan compatible)
 export const ELEVENLABS_VOICES = [
   { name: 'Sarah (Mature/Female)', id: 'EXAVITQu4vr4xnSDxMaL' },
@@ -269,7 +338,7 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
     rate: 1,
     pitch: 1,
     volume: 1,
-    voiceURI: 'EXAVITQu4vr4xnSDxMaL', // ElevenLabs: Sarah (free plan compatible)
+    voiceURI: 'Kore', // Gemini: Kore (firm)
   },
   voiceInput: {
     language: 'en-US',

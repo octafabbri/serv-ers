@@ -112,6 +112,7 @@ export interface TireServiceInfo {
   requested_tire: string;       // size/brand e.g. "295/75R22.5"
   number_of_tires: number;
   tire_position: string;        // e.g. "left front steer", "right rear drive"
+  tire_condition?: string;      // e.g. "FLAT_TIRE", "BLOWN_TIRE", "LEAKING_AIR"
 }
 
 export interface MechanicalServiceInfo {
@@ -150,7 +151,12 @@ export interface ServiceRequest {
   id: string;
   timestamp: Date;
 
-  // Contact
+  // Caller identity
+  caller_type: 'DRIVER' | 'FLEET_MANAGER';
+  caller_name?: string;   // fleet manager name (when caller_type is FLEET_MANAGER)
+  caller_phone?: string;  // fleet manager phone (when caller_type is FLEET_MANAGER)
+
+  // Contact (always the truck driver)
   driver_name: string;
   contact_phone: string;
   fleet_name: string;
@@ -158,6 +164,7 @@ export interface ServiceRequest {
 
   // Vehicle identifier
   unit_number: string;
+  vin_number: string;
 
   // Service details
   service_type: ServiceType;

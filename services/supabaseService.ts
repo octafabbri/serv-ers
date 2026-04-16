@@ -128,6 +128,10 @@ interface ServiceRequestRow {
   decline_reason: string | null;
   ship_to: string | null;
   unit_number: string | null;
+  caller_type: string | null;
+  caller_name: string | null;
+  caller_phone: string | null;
+  vin_number: string | null;
 }
 
 const rowToServiceRequest = (row: ServiceRequestRow): ServiceRequest => ({
@@ -161,6 +165,10 @@ const rowToServiceRequest = (row: ServiceRequestRow): ServiceRequest => ({
   decline_reason: row.decline_reason ?? undefined,
   ship_to: row.ship_to ?? '',
   unit_number: row.unit_number ?? '',
+  caller_type: (row.caller_type as 'DRIVER' | 'FLEET_MANAGER') ?? 'DRIVER',
+  caller_name: row.caller_name ?? undefined,
+  caller_phone: row.caller_phone ?? undefined,
+  vin_number: row.vin_number ?? '',
 });
 
 const serviceRequestToRow = (request: ServiceRequest) => ({
@@ -190,6 +198,10 @@ const serviceRequestToRow = (request: ServiceRequest) => ({
   decline_reason: request.decline_reason || null,
   ship_to: request.ship_to || null,
   unit_number: request.unit_number || null,
+  caller_type: request.caller_type || null,
+  caller_name: request.caller_name || null,
+  caller_phone: request.caller_phone || null,
+  vin_number: request.vin_number || null,
 });
 
 export const submitServiceRequest = async (request: ServiceRequest): Promise<ServiceRequest | null> => {

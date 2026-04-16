@@ -122,17 +122,28 @@ const renderPDFHTML = (request: ServiceRequest): string => {
           URGENCY: ${urgencyLabel}
         </div>
 
-        <!-- Driver Information -->
+        <!-- Driver / Contact Information -->
         <div style="margin: 15px 0; border-bottom: 2px solid #000; padding-bottom: 10px;">
           <h3 style="margin: 5px 0; font-size: 16px; text-transform: uppercase; background: #f0f0f0; padding: 5px;">
             DRIVER INFORMATION
           </h3>
           <p style="margin: 5px 0; font-size: 13px;">
-            <strong>Name:</strong> ${request.driver_name}
+            <strong>Driver Name:</strong> ${request.driver_name}
           </p>
           <p style="margin: 5px 0; font-size: 13px;">
-            <strong>Phone:</strong> ${request.contact_phone}
+            <strong>Driver Phone:</strong> ${request.contact_phone}
           </p>
+          ${request.caller_type === 'FLEET_MANAGER' ? `
+          <p style="margin: 5px 0; font-size: 13px;">
+            <strong>Caller:</strong> Fleet Manager
+          </p>
+          <p style="margin: 5px 0; font-size: 13px;">
+            <strong>Manager Name:</strong> ${request.caller_name || 'N/A'}
+          </p>
+          <p style="margin: 5px 0; font-size: 13px;">
+            <strong>Manager Phone:</strong> ${request.caller_phone || 'N/A'}
+          </p>
+          ` : ''}
           <p style="margin: 5px 0; font-size: 13px;">
             <strong>Fleet:</strong> ${request.fleet_name}
           </p>
@@ -177,6 +188,11 @@ const renderPDFHTML = (request: ServiceRequest): string => {
           <p style="margin: 5px 0; font-size: 13px;">
             <strong>Unit Number:</strong> ${request.unit_number}
           </p>
+          ${request.vin_number ? `
+          <p style="margin: 5px 0; font-size: 13px;">
+            <strong>VIN:</strong> ${request.vin_number}
+          </p>
+          ` : ''}
         </div>
 
         <!-- Service Required -->
@@ -188,6 +204,11 @@ const renderPDFHTML = (request: ServiceRequest): string => {
             <p style="margin: 5px 0; font-size: 13px;">
               <strong>Requested Service:</strong> ${request.tire_info.requested_service}
             </p>
+            ${request.tire_info.tire_condition ? `
+            <p style="margin: 5px 0; font-size: 13px;">
+              <strong>Condition:</strong> ${request.tire_info.tire_condition.replace(/_/g, ' ')}
+            </p>
+            ` : ''}
             <p style="margin: 5px 0; font-size: 13px;">
               <strong>Tire:</strong> ${request.tire_info.requested_tire}
             </p>
