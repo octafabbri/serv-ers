@@ -16,10 +16,12 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "deploy": "npm run build && wrangler pages deploy",
-    "deploy:preview": "npm run build && wrangler pages deploy --branch preview"
+    "deploy:preview": "npm run build && wrangler pages deploy --branch preview",
+    "mcp": "tsx mcp-server/index.ts"
   },
   "dependencies": {
     "@google/genai": "^1.41.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@supabase/supabase-js": "^2.103.0",
     "@types/pg": "^8.20.0",
     "concurrently": "^9.2.1",

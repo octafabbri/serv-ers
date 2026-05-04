@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "fleet": {
+      "command": "npx",
+      "args": ["tsx", "mcp-server/index.ts"],
+      "cwd": "/Users/octa/olabs/octafabbri/hey/serv-ers",
+      "env": {
+        "API_BASE_URL": "http://localhost:3001",
+        "API_CLIENT_ID": "fleet-app",
+        "API_CLIENT_SECRET": "fleet-app-secret-2026"
+      }
+    }
+  }
+}
