@@ -245,10 +245,10 @@ export const FleetApp: React.FC<FleetAppProps> = ({ onSwitchRole }) => {
     const timeGreeting = getTimeBasedGreeting();
     const scopeNote = FEATURE_FLAGS.MULTI_POSITION_SERVICE_ENABLED
       ? ''
-      : ' At this moment, I handle tire, wheel, and mudflap emergencies — one position per request.';
+      : ' for servicing 1 tire position';
     const greeting = userProfile.userName
-      ? `${timeGreeting}, ${userProfile.userName}! I'm Serv, your Fleet Services AI Assistant.${scopeNote} What do you need?`
-      : `${timeGreeting}! I'm Serv, your Fleet Services AI Assistant.${scopeNote} What do you need?`;
+      ? `${timeGreeting}, ${userProfile.userName}! I'm Serv, ONCall’s expedited AI service ${scopeNote}, who am I speaking with and how can I help?`
+      : `${timeGreeting}! I'm Serv, ONCall’s expedited AI service ${scopeNote}, who am I speaking with and how can I help?`;
 
     addMessage('ai', greeting);
     speakAiResponse(greeting);
